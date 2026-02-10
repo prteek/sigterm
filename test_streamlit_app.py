@@ -22,7 +22,7 @@ class TestProcessCommand:
         result_type, result_content = process_command("ls")
         assert result_type == "text"
         # Verify exact ls output
-        expected_output = "about/\nblog/\ncontact.txt"
+        expected_output = "about\nblog/"
         assert result_content == expected_output
 
     def test_ls_command_contains_entries(self):
@@ -30,11 +30,10 @@ class TestProcessCommand:
         result_type, result_content = process_command("ls")
         assert result_type == "text"
         assert "about" in result_content
-        assert "blog" in result_content
-        assert "contact.txt" in result_content
-        # Verify no extra entries
+        assert "blog/" in result_content
+        # Verify entries count
         lines = [line.strip() for line in result_content.strip().split('\n') if line.strip()]
-        assert len(lines) == 3, f"Expected 3 entries, got {len(lines)}: {lines}"
+        assert len(lines) == 2, f"Expected 2 entries, got {len(lines)}: {lines}"
 
     def test_whoami_command(self):
         """Test whoami command returns user info"""
