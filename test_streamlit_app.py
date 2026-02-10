@@ -18,12 +18,23 @@ class TestProcessCommand:
         assert "blog" not in result_content
 
     def test_ls_command(self):
-        """Test ls command returns directory listing"""
+        """Test ls command returns directory listing with current entries"""
         result_type, result_content = process_command("ls")
         assert result_type == "text"
-        assert "about/" in result_content
-        assert "blog/" in result_content
+        # Verify exact ls output
+        expected_output = "about/\nblog/\ncontact.txt"
+        assert result_content == expected_output
+
+    def test_ls_command_contains_entries(self):
+        """Test ls command contains all expected directory and file entries"""
+        result_type, result_content = process_command("ls")
+        assert result_type == "text"
+        assert "about" in result_content
+        assert "blog" in result_content
         assert "contact.txt" in result_content
+        # Verify no extra entries
+        lines = [line.strip() for line in result_content.strip().split('\n') if line.strip()]
+        assert len(lines) == 3, f"Expected 3 entries, got {len(lines)}: {lines}"
 
     def test_whoami_command(self):
         """Test whoami command returns user info"""
