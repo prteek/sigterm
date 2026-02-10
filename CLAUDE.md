@@ -21,3 +21,7 @@ A terminal interface for a personal portfolio, built with Streamlit.
 ## Skills
 
 - **refresh** - Updates CLAUDE.md documentation (`/refresh`)
+
+## Git
+
+- **Commits** - Never include `Co-Authored-By` trailers in commit messages
