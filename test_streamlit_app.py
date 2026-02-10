@@ -122,3 +122,38 @@ class TestProcessCommand:
         result_type, result_content = process_command('echo "quoted text"')
         assert result_type == "text"
         assert result_content == '"quoted text"'
+
+    def test_home_tilde_command(self):
+        """Test ~ command returns home directory welcome message"""
+        result_type, result_content = process_command("~")
+        assert result_type == "text"
+        assert "Inference Terminal" in result_content
+        assert "Welcome" in result_content
+        assert "help" in result_content
+
+    def test_parent_directory_command(self):
+        """Test .. command returns parent directory"""
+        result_type, result_content = process_command("..")
+        assert result_type == "text"
+        assert result_content == "parent@inference"
+
+    def test_help_includes_new_commands(self):
+        """Test that help command includes ~ and .. commands"""
+        result_type, result_content = process_command("help")
+        assert result_type == "text"
+        assert "~" in result_content
+        assert ".." in result_content
+
+    def test_tilde_command_format(self):
+        """Test ~ command returns properly formatted output"""
+        result_type, result_content = process_command("~")
+        assert result_type == "text"
+        lines = result_content.split('\n')
+        assert len(lines) >= 2, "~ command should return multiple lines"
+
+    def test_parent_directory_specific_content(self):
+        """Test .. command returns specific parent directory content"""
+        result_type, result_content = process_command("..")
+        assert result_type == "text"
+        assert "parent" in result_content
+        assert "inference" in result_content

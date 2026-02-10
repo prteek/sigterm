@@ -34,10 +34,12 @@ def load_page(page_name):
 
 def process_command(cmd):
     commands = {
-        "help": "Available: help, ls, echo, whoami, clear",
+        "help": "Available: help, ls, echo, whoami, clear, ~, ..",
         "ls": "about\nblog/",
         "whoami": "user@inference",
         "clear": "",
+        "~": "Inference Terminal v1.0\n$ Welcome to your terminal interface\nType 'help' for available commands",
+        "..": "parent@inference",
     }
 
     if cmd in commands:
