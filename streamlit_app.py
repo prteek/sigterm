@@ -42,9 +42,15 @@ def process_command(cmd, current_dir="~"):
     Returns:
         tuple: (result_type, content, new_directory) where new_directory is None if unchanged
     """
-    # Define directory structure
-    directories = {
-        "blog": {"type": "directory", "content": "blog.py"},
+    # Define filesystem structure
+    # .py files are directories (accessible via cd)
+    py_files = {
+        "blog": "blog.py",
+    }
+
+    # .txt files are text files (readable via cat)
+    txt_files = {
+        "about": "about.txt",
     }
 
     help_text = """help              Show available commands
@@ -72,13 +78,21 @@ cat               Display file contents"""
     if cmd in commands:
         return ("text", commands[cmd], None)
     elif cmd.startswith("cat "):
-        # cat command to display file contents
+        # cat command to display .txt file contents
         target = cmd[4:].strip()
-        if target == "about.txt":
+
+        # Check if target is a .txt file (remove extension if provided)
+        if target.endswith(".txt"):
+            target_base = target[:-4]
+        else:
+            target_base = target
+            target = f"{target}.txt"
+
+        if target_base in txt_files:
             pages_dir = os.path.join(os.path.dirname(__file__), "pages")
-            about_path = os.path.join(pages_dir, "about.txt")
+            file_path = os.path.join(pages_dir, txt_files[target_base])
             try:
-                with open(about_path, "r") as f:
+                with open(file_path, "r") as f:
                     content = f.read()
                 return ("text", content, None)
             except FileNotFoundError:
@@ -107,17 +121,13 @@ cat               Display file contents"""
             else:
                 return ("text", "Already at home", None)
         elif target:
-            # Check if it's a directory
-            if target in directories:
-                # Load the directory's content file
-                content_file = directories[target]["content"].replace(".py", "")
+            # Check if it's a .py file (directory)
+            if target in py_files:
+                # Load the .py file content
+                content_file = py_files[target].replace(".py", "")
                 page_result = load_page(content_file)
                 if page_result:
                     return (page_result[0], page_result[1], target)
-            # Try to load as a page
-            page_result = load_page(target)
-            if page_result:
-                return (page_result[0], page_result[1], target)
             return ("text", f"cd: {target}: No such file or directory", None)
         else:
             return ("text", "cd: missing directory argument", None)
