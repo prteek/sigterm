@@ -75,11 +75,12 @@ def render(st):
 
     if posts:
         for post in posts:
-            st.markdown(f"**[{post['title']}]({post['url']})**")
+            # Format title as terminal text with markdown URL
+            st.markdown(f"> [{post['title']}]({post['url']})")
 
             if post['tags']:
-                tag_str = " · ".join([f"`{tag}`" for tag in post['tags']])
-                st.markdown(tag_str)
+                tag_str = " | ".join(post['tags'])
+                st.code(tag_str, language="")
 
             st.divider()
     else:
