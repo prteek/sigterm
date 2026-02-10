@@ -100,19 +100,17 @@ class TestProcessCommand:
         assert len(result) == 3
         assert result[0] in ("text", "streamlit")
 
-    def test_about_page_loading(self):
-        """Test that about page can be loaded"""
+    def test_about_command_not_found(self):
+        """Test that about command is not found (use cat instead)"""
         result_type, result_content, new_dir = process_command("about")
-        # Should either load successfully or return error
-        assert isinstance(result_type, str)
-        assert isinstance(result_content, str)
+        assert result_type == "text"
+        assert "command not found" in result_content
 
-    def test_blog_page_loading(self):
-        """Test that blog page can be loaded"""
+    def test_blog_command_not_found(self):
+        """Test that blog command is not found (use cd instead)"""
         result_type, result_content, new_dir = process_command("blog")
-        # Should return streamlit type for blog page
-        assert isinstance(result_type, str)
-        assert result_type in ("streamlit", "text")
+        assert result_type == "text"
+        assert "command not found" in result_content
 
     def test_echo_numeric_input(self):
         """Test echo with numeric input"""

@@ -112,10 +112,6 @@ def process_command(cmd, current_dir="~"):
         else:
             return ("text", "cd: missing directory argument", None)
     else:
-        # Try to load as a page
-        page_result = load_page(cmd)
-        if page_result:
-            return page_result + (None,)
         return ("text", f"command not found: {cmd}", None)
 
 st.markdown("""
