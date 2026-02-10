@@ -259,17 +259,17 @@ class TestProcessCommand:
         assert "cat about" in result_content
 
     def test_cat_about_me_md(self):
-        """Test cat about_me.md displays markdown content"""
+        """Test cat about_me.md renders as markdown"""
         result_type, result_content, new_dir = process_command("cat about_me.md")
-        assert result_type == "text"
+        assert result_type == "markdown"
         assert "About Me" in result_content
         assert "Prateek" in result_content
         assert new_dir is None
 
     def test_cat_about_me_without_extension(self):
-        """Test cat about_me displays markdown content without extension"""
+        """Test cat about_me renders as markdown without extension"""
         result_type, result_content, new_dir = process_command("cat about_me")
-        assert result_type == "text"
+        assert result_type == "markdown"
         assert "About Me" in result_content
         assert new_dir is None
 

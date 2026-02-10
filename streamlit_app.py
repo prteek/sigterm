@@ -108,7 +108,11 @@ cat               Display file contents"""
             try:
                 with open(file_path, "r") as f:
                     content = f.read()
-                return ("text", content, None)
+                # Check if file is markdown
+                if txt_files[target_base].endswith(".md"):
+                    return ("markdown", content, None)
+                else:
+                    return ("text", content, None)
             except FileNotFoundError:
                 return ("text", f"cat: {target}: No such file or directory", None)
             except Exception as e:
@@ -190,6 +194,8 @@ if st.session_state.commands and st.session_state.outputs:
 
     if output_data["type"] == "text":
         st.code(output_data["content"], language="bash")
+    elif output_data["type"] == "markdown":
+        st.markdown(output_data["content"])
     elif output_data["type"] == "streamlit":
         with st.container():
             try:
