@@ -235,3 +235,24 @@ class TestProcessCommand:
         result_type, result_content, new_dir = process_command("help")
         assert result_type == "text"
         assert "cat" in result_content
+
+    def test_cat_directory_error(self):
+        """Test cat with directory input shows helpful error"""
+        result_type, result_content, new_dir = process_command("cat blog")
+        assert result_type == "text"
+        assert "Is a directory" in result_content
+        assert "cd blog" in result_content
+
+    def test_cd_text_file_error(self):
+        """Test cd with text file input shows helpful error"""
+        result_type, result_content, new_dir = process_command("cd about")
+        assert result_type == "text"
+        assert "Is a text file" in result_content
+        assert "cat about" in result_content
+
+    def test_cd_text_file_with_extension_error(self):
+        """Test cd with .txt extension shows helpful error"""
+        result_type, result_content, new_dir = process_command("cd about.txt")
+        assert result_type == "text"
+        assert "Is a text file" in result_content
+        assert "cat about" in result_content

@@ -84,6 +84,12 @@ cat               Display file contents"""
         # cat command to display .txt file contents
         target = cmd[4:].strip()
 
+        # Check if trying to cat a .py file (directory)
+        if target in py_files or target.endswith(".py"):
+            target_base = target.replace(".py", "") if target.endswith(".py") else target
+            if target_base in py_files:
+                return ("text", f"cat: {target}: Is a directory\nUse 'cd {target_base}' to explore it", None)
+
         # Check if target is a .txt file (remove extension if provided)
         if target.endswith(".txt"):
             target_base = target[:-4]
@@ -130,6 +136,12 @@ cat               Display file contents"""
             else:
                 return ("text", "Already at home", None)
         elif target:
+            # Check if trying to cd into a .txt file
+            if target in txt_files or target.endswith(".txt"):
+                target_base = target.replace(".txt", "") if target.endswith(".txt") else target
+                if target_base in txt_files:
+                    return ("text", f"cd: {target}: Is a text file\nUse 'cat {target_base}' to view its contents", None)
+
             # Check if it's a .py file (directory)
             if target in py_files:
                 # Load the .py file content
