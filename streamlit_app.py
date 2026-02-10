@@ -85,9 +85,11 @@ def process_command(cmd, current_dir="~"):
         # cd command to navigate into pages or directories
         target = cmd[3:].strip()
         if target == "..":
-            # Navigate back to root
+            # Navigate back to root/parent
             if current_dir != "~":
-                return ("text", f"Navigated back from {current_dir}", "~")
+                # Show what ls would display at parent level
+                parent_ls_output = "about.txt\nblog/"
+                return ("text", parent_ls_output, "~")
             else:
                 return ("text", "Already at root directory", None)
         elif target == "~":

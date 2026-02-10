@@ -146,10 +146,12 @@ class TestProcessCommand:
         assert new_dir is None
 
     def test_cd_parent_from_subdirectory(self):
-        """Test cd .. navigates back from subdirectory"""
+        """Test cd .. navigates back from subdirectory and shows ls output"""
         result_type, result_content, new_dir = process_command("cd ..", current_dir="blog")
         assert result_type == "text"
-        assert "Navigated back" in result_content
+        # Should show parent directory contents (same as ls at parent level)
+        assert "about.txt" in result_content
+        assert "blog/" in result_content
         assert new_dir == "~"
 
 
