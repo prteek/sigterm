@@ -38,7 +38,7 @@ cat               Display file contents"""
 
 def cmd_whoami():
     """Show current user"""
-    return ("text", "user@inference", None)
+    return ("text", "user@likelihood", None)
 
 
 def cmd_clear():
