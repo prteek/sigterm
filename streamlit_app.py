@@ -35,7 +35,7 @@ def load_page(page_name):
 def process_command(cmd):
     commands = {
         "help": "Available: help, ls, echo, whoami, clear",
-        "ls": "about\nblog/",
+        "ls": "about\nblog/\n",
         "whoami": "user@inference",
         "clear": "",
     }
