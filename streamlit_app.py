@@ -1,7 +1,7 @@
 import streamlit as st
 from commands import process_command
 
-st.set_page_config(page_title="Likelihood", layout="wide")
+st.set_page_config(page_title="Sigterm", layout="wide")
 
 st.markdown("""
 <style>
@@ -16,7 +16,7 @@ st.markdown("""
     .title-link { color: #00FF00; text-decoration: none; }
     .title-link:hover { text-decoration: underline; }
 </style>
-<h1><a href="?" target="_self" class="title-link">$ Likelihood</a></h1>
+<h1><a href="?" target="_self" class="title-link">$ Sigterm</a></h1>
 """, unsafe_allow_html=True)
 
 if "commands" not in st.session_state:
