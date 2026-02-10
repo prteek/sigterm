@@ -51,7 +51,7 @@ A terminal interface for a personal portfolio, built with Streamlit. Implements 
 - `cat <file>` - Display file contents (supports `.txt` and `.md` files with markdown rendering)
 - `pwd` - Print working directory
 - `echo [text]` - Display text
-- `whoami` - Show current user (`user@likelihood`)
+- `whoami` - Show current user (`user@sigterm`)
 - `clear` - Clear command history
 
 **Dynamic Pages:**
