@@ -34,7 +34,7 @@ def load_page(page_name):
 
 def process_command(cmd):
     commands = {
-        "help": "Available: help, ls, echo, whoami, clear, ~, .., about",
+        "help": "Available: help, ls, echo, whoami, clear, ~, .., cd",
         "ls": "blog/",
         "whoami": "user@inference",
         "clear": "",
@@ -46,6 +46,16 @@ def process_command(cmd):
         return ("text", commands[cmd])
     elif cmd.startswith("echo "):
         return ("text", cmd[5:])
+    elif cmd.startswith("cd "):
+        # cd command to navigate into pages
+        target = cmd[3:].strip()
+        if target:
+            page_result = load_page(target)
+            if page_result:
+                return page_result
+            return ("text", f"cd: {target}: No such file or directory")
+        else:
+            return ("text", "cd: missing directory argument")
     else:
         # Try to load as a page
         page_result = load_page(cmd)

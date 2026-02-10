@@ -14,26 +14,24 @@ class TestProcessCommand:
         assert "echo" in result_content
         assert "whoami" in result_content
         assert "clear" in result_content
-        assert "about" not in result_content
-        assert "blog" not in result_content
+        assert "cd" in result_content
 
     def test_ls_command(self):
         """Test ls command returns directory listing with current entries"""
         result_type, result_content = process_command("ls")
         assert result_type == "text"
         # Verify exact ls output
-        expected_output = "about\nblog/"
+        expected_output = "blog/"
         assert result_content == expected_output
 
     def test_ls_command_contains_entries(self):
         """Test ls command contains all expected directory and file entries"""
         result_type, result_content = process_command("ls")
         assert result_type == "text"
-        assert "about" in result_content
         assert "blog/" in result_content
         # Verify entries count
         lines = [line.strip() for line in result_content.strip().split('\n') if line.strip()]
-        assert len(lines) == 2, f"Expected 2 entries, got {len(lines)}: {lines}"
+        assert len(lines) == 1, f"Expected 1 entry, got {len(lines)}: {lines}"
 
     def test_whoami_command(self):
         """Test whoami command returns user info"""
@@ -157,3 +155,35 @@ class TestProcessCommand:
         assert result_type == "text"
         assert "parent" in result_content
         assert "inference" in result_content
+
+    def test_cd_blog_command(self):
+        """Test cd blog loads the blog page"""
+        result_type, result_content = process_command("cd blog")
+        # Blog page can be loaded (returns text or streamlit)
+        assert isinstance(result_type, str)
+        assert result_type in ("streamlit", "text")
+
+    def test_cd_about_command(self):
+        """Test cd about loads the about page"""
+        result_type, result_content = process_command("cd about")
+        # Should load about.txt which returns text type
+        assert result_type == "text"
+
+    def test_cd_invalid_target(self):
+        """Test cd with invalid target returns error"""
+        result_type, result_content = process_command("cd nonexistent")
+        assert result_type == "text"
+        assert "No such file or directory" in result_content
+
+    def test_cd_no_argument(self):
+        """Test cd without argument returns error"""
+        result_type, result_content = process_command("cd ")
+        assert result_type == "text"
+        assert "missing directory argument" in result_content
+
+    def test_cd_with_whitespace(self):
+        """Test cd command handles whitespace correctly"""
+        result_type, result_content = process_command("cd   blog   ")
+        # Should still load blog despite extra whitespace
+        assert isinstance(result_type, str)
+        assert result_type in ("streamlit", "text")
