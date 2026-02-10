@@ -91,4 +91,4 @@ A terminal interface for a personal portfolio, built with Streamlit. Implements 
 
 ## Git
 
-- **Commits** - Include `Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>` trailer in commit messages
+- **Commits** - Never include `Co-Authored-By: ` trailer in commit messages
