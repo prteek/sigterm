@@ -87,7 +87,7 @@ class TestProcessCommand:
         """Test whoami command returns user info"""
         result_type, result_content, new_dir = process_command("whoami")
         assert result_type == "text"
-        assert result_content == "user@inference"
+        assert result_content == "user@sigterm"
 
     def test_pwd_command_at_root(self):
         """Test pwd command shows /home at root"""
