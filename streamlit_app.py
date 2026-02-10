@@ -32,36 +32,56 @@ def load_page(page_name):
 
     return None
 
-def process_command(cmd):
+def process_command(cmd, current_dir="~"):
+    """Process terminal commands with directory context
+
+    Args:
+        cmd: Command string to process
+        current_dir: Current directory context (~ for root, or page name)
+
+    Returns:
+        tuple: (result_type, content, new_directory) where new_directory is None if unchanged
+    """
     commands = {
         "help": "Available: help, ls, echo, whoami, clear, ~, .., cd",
-        "ls": "blog/",
         "whoami": "user@inference",
         "clear": "",
         "~": "Inference Terminal v1.0\n$ Welcome to your terminal interface\nType 'help' for available commands",
-        "..": "parent@inference",
     }
 
+    # Dynamic ls based on current directory
+    if cmd == "ls":
+        if current_dir == "~":
+            return ("text", "blog/", None)
+        else:
+            return ("text", "..", None)
+
     if cmd in commands:
-        return ("text", commands[cmd])
+        return ("text", commands[cmd], None)
+    elif cmd == "..":
+        # Navigate back to root
+        if current_dir != "~":
+            return ("text", f"Navigated back from {current_dir}", "~")
+        else:
+            return ("text", "Already at root directory", None)
     elif cmd.startswith("echo "):
-        return ("text", cmd[5:])
+        return ("text", cmd[5:], None)
     elif cmd.startswith("cd "):
         # cd command to navigate into pages
         target = cmd[3:].strip()
         if target:
             page_result = load_page(target)
             if page_result:
-                return page_result
-            return ("text", f"cd: {target}: No such file or directory")
+                return (page_result[0], page_result[1], target)
+            return ("text", f"cd: {target}: No such file or directory", None)
         else:
-            return ("text", "cd: missing directory argument")
+            return ("text", "cd: missing directory argument", None)
     else:
         # Try to load as a page
         page_result = load_page(cmd)
         if page_result:
-            return page_result
-        return ("text", f"command not found: {cmd}")
+            return page_result + (None,)
+        return ("text", f"command not found: {cmd}", None)
 
 st.markdown("""
 <style>
@@ -82,6 +102,7 @@ st.markdown("""
 if "commands" not in st.session_state:
     st.session_state.commands = []
     st.session_state.outputs = []
+    st.session_state.current_dir = "~"
 
 # Display only the last command and output
 if st.session_state.commands and st.session_state.outputs:
@@ -106,8 +127,11 @@ def submit_command():
             st.session_state.outputs = []
         else:
             st.session_state.commands.append(st.session_state.input)
-            content_type, content = process_command(st.session_state.input)
+            content_type, content, new_dir = process_command(st.session_state.input, st.session_state.current_dir)
             st.session_state.outputs.append({"type": content_type, "content": content})
+            # Update directory if changed
+            if new_dir is not None:
+                st.session_state.current_dir = new_dir
         st.session_state.input = ""
 
 st.text_input("$ ", key="input", placeholder="Type command (e.g. help)...", on_change=submit_command)
