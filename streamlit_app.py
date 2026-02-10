@@ -43,7 +43,7 @@ def process_command(cmd, current_dir="~"):
         tuple: (result_type, content, new_directory) where new_directory is None if unchanged
     """
     commands = {
-        "help": "Available: help, ls, echo, whoami, clear, cd",
+        "help": "Available: help, ls, echo, whoami, clear, cd, cat",
         "whoami": "user@inference",
         "clear": "",
     }
@@ -51,12 +51,28 @@ def process_command(cmd, current_dir="~"):
     # Dynamic ls based on current directory
     if cmd == "ls":
         if current_dir == "~":
-            return ("text", "blog/", None)
+            return ("text", "about.txt\nblog/", None)
         else:
             return ("text", "..", None)
 
     if cmd in commands:
         return ("text", commands[cmd], None)
+    elif cmd.startswith("cat "):
+        # cat command to display file contents
+        target = cmd[4:].strip()
+        if target == "about.txt":
+            pages_dir = os.path.join(os.path.dirname(__file__), "pages")
+            about_path = os.path.join(pages_dir, "about.txt")
+            try:
+                with open(about_path, "r") as f:
+                    content = f.read()
+                return ("text", content, None)
+            except FileNotFoundError:
+                return ("text", f"cat: {target}: No such file or directory", None)
+            except Exception as e:
+                return ("text", f"cat: Error reading {target}: {str(e)}", None)
+        else:
+            return ("text", f"cat: {target}: No such file or directory", None)
     elif cmd.startswith("echo "):
         return ("text", cmd[5:], None)
     elif cmd.startswith("cd "):

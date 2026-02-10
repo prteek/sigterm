@@ -25,17 +25,18 @@ class TestProcessCommand:
         result_type, result_content, new_dir = process_command("ls")
         assert result_type == "text"
         # Verify exact ls output
-        expected_output = "blog/"
+        expected_output = "about.txt\nblog/"
         assert result_content == expected_output
 
     def test_ls_command_contains_entries(self):
         """Test ls command contains all expected directory and file entries"""
         result_type, result_content, new_dir = process_command("ls")
         assert result_type == "text"
+        assert "about.txt" in result_content
         assert "blog/" in result_content
         # Verify entries count
         lines = [line.strip() for line in result_content.strip().split('\n') if line.strip()]
-        assert len(lines) == 1, f"Expected 1 entry, got {len(lines)}: {lines}"
+        assert len(lines) == 2, f"Expected 2 entries, got {len(lines)}: {lines}"
 
     def test_whoami_command(self):
         """Test whoami command returns user info"""
@@ -185,3 +186,30 @@ class TestProcessCommand:
         # Should still load blog despite extra whitespace
         assert isinstance(result_type, str)
         assert result_type in ("streamlit", "text")
+
+    def test_cat_about_txt(self):
+        """Test cat about.txt displays file contents"""
+        result_type, result_content, new_dir = process_command("cat about.txt")
+        assert result_type == "text"
+        assert "Prateek" in result_content or "ABOUT" in result_content
+        assert new_dir is None
+
+    def test_cat_nonexistent_file(self):
+        """Test cat with nonexistent file returns error"""
+        result_type, result_content, new_dir = process_command("cat nonexistent.txt")
+        assert result_type == "text"
+        assert "No such file or directory" in result_content
+        assert new_dir is None
+
+    def test_cat_no_argument(self):
+        """Test cat without argument returns error"""
+        result_type, result_content, new_dir = process_command("cat ")
+        assert result_type == "text"
+        assert "No such file or directory" in result_content
+        assert new_dir is None
+
+    def test_help_includes_cat(self):
+        """Test that help command includes cat"""
+        result_type, result_content, new_dir = process_command("help")
+        assert result_type == "text"
+        assert "cat" in result_content
