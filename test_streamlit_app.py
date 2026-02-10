@@ -49,8 +49,8 @@ class TestProcessCommand:
         assert len(lines) == 3, f"Expected 3 entries, got {len(lines)}: {lines}"
 
     def test_ls_parent_directory(self):
-        """Test ls .. lists parent directory"""
-        result_type, result_content, new_dir = process_command("ls ..")
+        """Test ls .. from subdirectory lists parent"""
+        result_type, result_content, new_dir = process_command("ls ..", current_dir="blog")
         assert result_type == "text"
         assert "about.txt" in result_content
         assert "about_me.md" in result_content
@@ -90,16 +90,16 @@ class TestProcessCommand:
         assert result_content == "user@inference"
 
     def test_pwd_command_at_root(self):
-        """Test pwd command shows current working directory at root"""
+        """Test pwd command shows /home at root"""
         result_type, result_content, new_dir = process_command("pwd")
         assert result_type == "text"
-        assert "/home/user" in result_content
+        assert result_content == "/home"
 
     def test_pwd_command_in_subdirectory(self):
-        """Test pwd command shows current working directory in subdirectory"""
+        """Test pwd command shows /home/<directory> in subdirectory"""
         result_type, result_content, new_dir = process_command("pwd", current_dir="blog")
         assert result_type == "text"
-        assert "/blog" in result_content
+        assert result_content == "/home/blog"
 
     def test_echo_command_with_text(self):
         """Test echo command echoes back the provided text"""

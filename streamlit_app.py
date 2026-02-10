@@ -63,36 +63,43 @@ clear             Clear screen
 cd                Change directory
 cat               Display file contents"""
 
+    # Generate pwd output based on current directory
+    if current_dir == "~":
+        pwd_output = "/home"
+    else:
+        pwd_output = f"/home/{current_dir}"
+
     commands = {
         "help": help_text,
         "whoami": "user@inference",
         "clear": "",
-        "pwd": f"/{current_dir}" if current_dir != "~" else "/home/user",
+        "pwd": pwd_output,
     }
 
     # Dynamic ls based on current directory
+    home_contents = "about.txt\nabout_me.md\nblog/"
+
     if cmd == "ls" or cmd.startswith("ls "):
         # Check if ls has a target argument
         if cmd.startswith("ls "):
             target = cmd[3:].strip()
             if target == "..":
                 # List parent directory
-                parent_ls_output = "about.txt\nabout_me.md\nblog/"
-                return ("text", parent_ls_output, None)
-            elif target == "~" or target == ".":
-                # List root/current
                 if current_dir == "~":
-                    return ("text", "about.txt\nabout_me.md\nblog/", None)
+                    return ("text", f"ls: ..: No such file or directory", None)
                 else:
-                    return ("text", "..", None)
+                    return ("text", home_contents, None)
+            elif target == "~" or target == "." or target == "/home":
+                # List root/home directory
+                return ("text", home_contents, None)
             else:
                 return ("text", f"ls: {target}: No such file or directory", None)
         else:
             # ls without arguments - list current directory
             if current_dir == "~":
-                return ("text", "about.txt\nabout_me.md\nblog/", None)
+                return ("text", home_contents, None)
             else:
-                # Inside a directory, show parent
+                # Inside a directory, show parent (..)
                 return ("text", "..", None)
 
     if cmd in commands:
@@ -152,9 +159,8 @@ cat               Display file contents"""
         if target == "..":
             # Navigate back to root/parent
             if current_dir != "~":
-                # Show what ls would display at parent level
-                parent_ls_output = "about.txt\nabout_me.md\nblog/"
-                return ("text", parent_ls_output, "~")
+                # Show what ls would display at parent level (/home)
+                return ("text", home_contents, "~")
             else:
                 return ("text", "Already at root directory", None)
         elif target == "~":
