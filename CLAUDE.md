@@ -1,4 +1,4 @@
-# Likelihood Terminal
+# Sigterm
 
 A terminal interface for a personal portfolio, built with Streamlit. Implements a functional command-line emulator with dark green retro styling, command history, and dynamic page loading system.
 
