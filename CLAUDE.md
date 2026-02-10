@@ -1,26 +1,41 @@
 # Terminal App
 
-A terminal interface for a personal portfolio, built with Streamlit.
+A terminal interface for a personal portfolio, built with Streamlit. Implements a functional command-line emulator with dark green retro styling and command history.
 
 ## Setup
 
-- Python 3.13 (via pyenv)
-- Virtual env: `pyenv activate terminal_app`
-- Install: `pip install streamlit`
-- Run: `streamlit run app.py`
+- **Python version:** 3.13 (via pyenv)
+- **Virtual env:** `pyenv activate terminal_app`
+- **Install:** `pip install streamlit`
+- **Run:** `streamlit run app.py`
 
-## App
+## Project Structure
 
-**app.py** - Terminal emulator with:
-- Dark green terminal theme (#000000 bg, #00FF00 text)
-- Commands: `help`, `ls`, `echo`, `whoami`
-- Command history via session state
+- **app.py** - Main Streamlit application (terminal emulator)
+- **.streamlit/config.toml** - Theme configuration (dark green terminal style)
+- **.gitignore** - Python cache and build files excluded
 
-**Config** - `.streamlit/config.toml` sets theme and error details
+## App Features
+
+**Terminal Emulator** (app.py):
+- Dark green retro theme (#000000 background, #00FF00 text)
+- Monospace font styling with custom CSS
+- Command processing: `help`, `ls`, `echo`, `whoami`
+- `echo` command: echoes user input
+- Command history stored in session state
+- Input callback (`on_change`) for command submission
+- Hidden Streamlit UI elements (menu, footer)
+
+**Theme Configuration** (.streamlit/config.toml):
+- Primary/text color: #00FF00 (green)
+- Background: #000000 (black)
+- Secondary background: #0a0a0a (dark gray)
+- Font: monospace
+- Error details: enabled
 
 ## Skills
 
-- **refresh** - Updates CLAUDE.md documentation (`/refresh`)
+- **refresh** - Audits project structure and updates CLAUDE.md (`/refresh`)
 
 ## Git
 
