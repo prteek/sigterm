@@ -69,12 +69,29 @@ cat               Display file contents"""
     }
 
     # Dynamic ls based on current directory
-    if cmd == "ls":
-        if current_dir == "~":
-            return ("text", "about.txt\nabout_me.md\nblog/", None)
+    if cmd == "ls" or cmd.startswith("ls "):
+        # Check if ls has a target argument
+        if cmd.startswith("ls "):
+            target = cmd[3:].strip()
+            if target == "..":
+                # List parent directory
+                parent_ls_output = "about.txt\nabout_me.md\nblog/"
+                return ("text", parent_ls_output, None)
+            elif target == "~" or target == ".":
+                # List root/current
+                if current_dir == "~":
+                    return ("text", "about.txt\nabout_me.md\nblog/", None)
+                else:
+                    return ("text", "..", None)
+            else:
+                return ("text", f"ls: {target}: No such file or directory", None)
         else:
-            # Inside a directory, show parent
-            return ("text", "..", None)
+            # ls without arguments - list current directory
+            if current_dir == "~":
+                return ("text", "about.txt\nabout_me.md\nblog/", None)
+            else:
+                # Inside a directory, show parent
+                return ("text", "..", None)
 
     if cmd in commands:
         return ("text", commands[cmd], None)
