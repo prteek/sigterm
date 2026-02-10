@@ -64,7 +64,7 @@ st.markdown("""
     .title-link { color: #00FF00; text-decoration: none; }
     .title-link:hover { text-decoration: underline; }
 </style>
-<h1><a href="?" class="title-link">$ Inference</a></h1>
+<h1><a href="?" target="_self" class="title-link">$ Inference</a></h1>
 """, unsafe_allow_html=True)
 
 if "commands" not in st.session_state:
