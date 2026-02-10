@@ -47,8 +47,16 @@ def process_command(cmd, current_dir="~"):
         "blog": {"type": "directory", "content": "blog.py"},
     }
 
+    help_text = """help              Show available commands
+ls                List directory contents
+echo              Display text
+whoami            Show current user
+clear             Clear screen
+cd                Change directory
+cat               Display file contents"""
+
     commands = {
-        "help": "Available: help, ls, echo, whoami, clear, cd, cat",
+        "help": help_text,
         "whoami": "user@inference",
         "clear": "",
     }
