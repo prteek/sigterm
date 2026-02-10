@@ -71,7 +71,11 @@ if "commands" not in st.session_state:
     st.session_state.commands = []
     st.session_state.outputs = []
 
-for cmd, output_data in zip(st.session_state.commands, st.session_state.outputs):
+# Display only the last command and output
+if st.session_state.commands and st.session_state.outputs:
+    cmd = st.session_state.commands[-1]
+    output_data = st.session_state.outputs[-1]
+
     st.markdown(f"<span class='terminal-prompt'>$ {cmd}</span>", unsafe_allow_html=True)
 
     if output_data["type"] == "text":
