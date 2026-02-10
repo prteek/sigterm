@@ -13,11 +13,10 @@ py_files = {
 # .txt and .md files are text files (readable via cat)
 txt_files = {
     "about": "about.txt",
-    "about_me": "about_me.md",
 }
 
 # Root directory listing
-home_contents = "about.txt\nabout_me.md\nblog/"
+home_contents = "about.txt\nblog/"
 
 
 # Simple command functions

@@ -11,7 +11,7 @@ class TestLsCommand:
         result_type, result_content, new_dir = process_command("ls")
         assert result_type == "text"
         # Verify exact ls output
-        expected_output = "about.txt\nabout_me.md\nblog/"
+        expected_output = "about.txt\nblog/"
         assert result_content == expected_output
 
     def test_ls_command_contains_entries(self):
@@ -19,18 +19,16 @@ class TestLsCommand:
         result_type, result_content, new_dir = process_command("ls")
         assert result_type == "text"
         assert "about.txt" in result_content
-        assert "about_me.md" in result_content
         assert "blog/" in result_content
         # Verify entries count
         lines = [line.strip() for line in result_content.strip().split('\n') if line.strip()]
-        assert len(lines) == 3, f"Expected 3 entries, got {len(lines)}: {lines}"
+        assert len(lines) == 2, f"Expected 2 entries, got {len(lines)}: {lines}"
 
     def test_ls_parent_directory(self):
         """Test ls .. from subdirectory lists parent"""
         result_type, result_content, new_dir = process_command("ls ..", current_dir="blog")
         assert result_type == "text"
         assert "about.txt" in result_content
-        assert "about_me.md" in result_content
         assert "blog/" in result_content
 
     def test_ls_parent_from_subdirectory(self):

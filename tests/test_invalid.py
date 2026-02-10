@@ -62,11 +62,10 @@ class TestGeneralBehavior:
         assert "Is a text file" in result_content
         assert "cat about" in result_content
 
-    def test_cd_parent_shows_about_me(self):
-        """Test cd .. shows about_me.md in listing"""
+    def test_cd_parent_shows_contents(self):
+        """Test cd .. shows parent directory contents"""
         result_type, result_content, new_dir = process_command("cd ..", current_dir="blog")
         assert result_type == "text"
         assert "about.txt" in result_content
-        assert "about_me.md" in result_content
         assert "blog/" in result_content
         assert new_dir == "~"
