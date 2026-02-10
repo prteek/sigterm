@@ -36,9 +36,10 @@ for cmd, out in zip(st.session_state.commands, st.session_state.output):
     st.markdown(f"<span class='terminal-prompt'>$ {cmd}</span>", unsafe_allow_html=True)
     st.code(out, language="bash")
 
-user_input = st.text_input("$ ", key="input", placeholder="Type command...")
-if user_input:
-    st.session_state.commands.append(user_input)
-    st.session_state.output.append(process_command(user_input))
-    st.session_state.input = ""
-    st.rerun()
+def submit_command():
+    if st.session_state.input:
+        st.session_state.commands.append(st.session_state.input)
+        st.session_state.output.append(process_command(st.session_state.input))
+        st.session_state.input = ""
+
+st.text_input("$ ", key="input", placeholder="Type command...", on_change=submit_command)
