@@ -1,0 +1,24 @@
+╔════════════════════════════════════════════╗
+║                 ABOUT ME                   ║
+╚════════════════════════════════════════════╝
+
+ Hi! I am Prateek, a data scientist and
+ creative technologist passionate about
+ building beautiful, functional data experiences.
+
+ I specialize in:
+ • Statistical analysis
+ • Machine learning (pydata stack)
+ • Analytics (DBT, duckdb)
+ • Creative Coding
+
+ When I am not working, I can be found:
+ → Exploring new technologies
+ → Contributing to open source
+ → Building side projects
+ → Analysing random data
+
+ Currently based in: Cambridge, UK
+
+ $ whoami
+ user@prateek
