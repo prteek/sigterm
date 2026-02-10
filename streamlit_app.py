@@ -61,10 +61,11 @@ st.markdown("""
     footer { visibility: hidden; }
     [data-testid="stSidebar"] { display: none; }
     .terminal-prompt { color: #00FF00; font-family: 'Courier New', monospace; font-weight: bold; }
+    .title-link { color: #00FF00; text-decoration: none; }
+    .title-link:hover { text-decoration: underline; }
 </style>
+<h1><a href="?" class="title-link">$ Inference</a></h1>
 """, unsafe_allow_html=True)
-
-st.title("$ Inference")
 
 if "commands" not in st.session_state:
     st.session_state.commands = []
