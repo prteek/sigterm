@@ -3,7 +3,7 @@ import os
 import importlib.util
 import sys
 
-st.set_page_config(page_title="Terminal", layout="wide")
+st.set_page_config(page_title="Inference", layout="wide")
 
 def load_page(page_name):
     """Load page content from pages directory
@@ -34,9 +34,9 @@ def load_page(page_name):
 
 def process_command(cmd):
     commands = {
-        "help": "Available: help, ls, echo, whoami, about, projects, clear",
-        "ls": "about/\nprojects/\ncontact.txt",
-        "whoami": "user@terminal-app",
+        "help": "Available: help, ls, echo, whoami, about, blog, clear",
+        "ls": "about/\nblog/\ncontact.txt",
+        "whoami": "user@inference",
         "clear": "",
     }
 
@@ -64,7 +64,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("$ Terminal")
+st.title("$ Inference")
 
 if "commands" not in st.session_state:
     st.session_state.commands = []
