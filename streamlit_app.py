@@ -48,9 +48,10 @@ def process_command(cmd, current_dir="~"):
         "blog": "blog.py",
     }
 
-    # .txt files are text files (readable via cat)
+    # .txt and .md files are text files (readable via cat)
     txt_files = {
         "about": "about.txt",
+        "about_me": "about_me.md",
     }
 
     help_text = """help              Show available commands
@@ -70,7 +71,7 @@ cat               Display file contents"""
     # Dynamic ls based on current directory
     if cmd == "ls":
         if current_dir == "~":
-            return ("text", "about.txt\nblog/", None)
+            return ("text", "about.txt\nabout_me.md\nblog/", None)
         else:
             # Inside a directory, show parent
             return ("text", "..", None)
@@ -81,7 +82,7 @@ cat               Display file contents"""
         # cat without arguments
         return ("text", "cat: missing file argument\nUsage: cat <file>", None)
     elif cmd.startswith("cat "):
-        # cat command to display .txt file contents
+        # cat command to display .txt or .md file contents
         target = cmd[4:].strip()
 
         # Check if trying to cat a .py file (directory)
@@ -90,12 +91,16 @@ cat               Display file contents"""
             if target_base in py_files:
                 return ("text", f"cat: {target}: Is a directory\nUse 'cd {target_base}' to explore it", None)
 
-        # Check if target is a .txt file (remove extension if provided)
+        # Check if target is a .txt or .md file (remove extension if provided)
         if target.endswith(".txt"):
             target_base = target[:-4]
+        elif target.endswith(".md"):
+            target_base = target[:-3]
         else:
             target_base = target
-            target = f"{target}.txt"
+            # Try to determine file type from txt_files mapping
+            if target_base not in txt_files:
+                target = f"{target}.txt"
 
         if target_base in txt_files:
             pages_dir = os.path.join(os.path.dirname(__file__), "pages")
@@ -125,7 +130,7 @@ cat               Display file contents"""
             # Navigate back to root/parent
             if current_dir != "~":
                 # Show what ls would display at parent level
-                parent_ls_output = "about.txt\nblog/"
+                parent_ls_output = "about.txt\nabout_me.md\nblog/"
                 return ("text", parent_ls_output, "~")
             else:
                 return ("text", "Already at root directory", None)

@@ -32,7 +32,7 @@ class TestProcessCommand:
         result_type, result_content, new_dir = process_command("ls")
         assert result_type == "text"
         # Verify exact ls output
-        expected_output = "about.txt\nblog/"
+        expected_output = "about.txt\nabout_me.md\nblog/"
         assert result_content == expected_output
 
     def test_ls_command_contains_entries(self):
@@ -40,10 +40,11 @@ class TestProcessCommand:
         result_type, result_content, new_dir = process_command("ls")
         assert result_type == "text"
         assert "about.txt" in result_content
+        assert "about_me.md" in result_content
         assert "blog/" in result_content
         # Verify entries count
         lines = [line.strip() for line in result_content.strip().split('\n') if line.strip()]
-        assert len(lines) == 2, f"Expected 2 entries, got {len(lines)}: {lines}"
+        assert len(lines) == 3, f"Expected 3 entries, got {len(lines)}: {lines}"
 
     def test_whoami_command(self):
         """Test whoami command returns user info"""
@@ -256,3 +257,27 @@ class TestProcessCommand:
         assert result_type == "text"
         assert "Is a text file" in result_content
         assert "cat about" in result_content
+
+    def test_cat_about_me_md(self):
+        """Test cat about_me.md displays markdown content"""
+        result_type, result_content, new_dir = process_command("cat about_me.md")
+        assert result_type == "text"
+        assert "About Me" in result_content
+        assert "Prateek" in result_content
+        assert new_dir is None
+
+    def test_cat_about_me_without_extension(self):
+        """Test cat about_me displays markdown content without extension"""
+        result_type, result_content, new_dir = process_command("cat about_me")
+        assert result_type == "text"
+        assert "About Me" in result_content
+        assert new_dir is None
+
+    def test_cd_parent_shows_about_me(self):
+        """Test cd .. shows about_me.md in listing"""
+        result_type, result_content, new_dir = process_command("cd ..", current_dir="blog")
+        assert result_type == "text"
+        assert "about.txt" in result_content
+        assert "about_me.md" in result_content
+        assert "blog/" in result_content
+        assert new_dir == "~"
