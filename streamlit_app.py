@@ -35,7 +35,7 @@ def load_page(page_name):
 def process_command(cmd):
     commands = {
         "help": "Available: help, ls, echo, whoami, clear",
-        "ls": "about\nblog/\n",
+        "ls": "about/\nblog/\ncontact.txt",
         "whoami": "user@inference",
         "clear": "",
     }
@@ -98,4 +98,4 @@ def submit_command():
             st.session_state.outputs.append({"type": content_type, "content": content})
         st.session_state.input = ""
 
-st.text_input("$ ", key="input", placeholder="Type command...", on_change=submit_command)
+st.text_input("$ ", key="input", placeholder="Type command (e.g. help)...", on_change=submit_command)
