@@ -5,9 +5,10 @@ A terminal interface for a personal portfolio, built with Streamlit. Implements 
 ## Setup
 
 - **Python version:** 3.13 (via pyenv)
-- **Virtual env:** `pyenv activate terminal_app`
-- **Install:** `pip install streamlit beautifulsoup4 requests`
+- **Virtual env:** `pyenv activate sigterm`
+- **Install:** `pip install -r requirements.txt`
 - **Run:** `streamlit run streamlit_app.py`
+- **Tests:** `pytest`
 
 ## Project Structure
 
@@ -17,10 +18,20 @@ A terminal interface for a personal portfolio, built with Streamlit. Implements 
 - **pages/** - Dynamic page content directory
   - **blog.py** - Dynamic blog fetcher page (loads posts from Regression Room)
   - **about.txt** - Text about page
-  - **about_me.md** - Markdown about page
+- **tests/** - Unit test directory (organized by command)
+  - **conftest.py** - Shared test configuration and fixtures
+  - **test_help.py** - Help command tests
+  - **test_ls.py** - Ls command tests
+  - **test_pwd.py** - Pwd command tests
+  - **test_whoami.py** - Whoami command tests
+  - **test_echo.py** - Echo command tests
+  - **test_clear.py** - Clear command tests
+  - **test_cd.py** - Cd command tests
+  - **test_cat.py** - Cat command tests
+  - **test_invalid.py** - Invalid command and general behavior tests
+- **pytest.ini** - Pytest configuration
 - **.streamlit/config.toml** - Theme configuration (dark green terminal style)
 - **requirements.txt** - Python dependencies (streamlit, pytest, beautifulsoup4, requests)
-- **test_streamlit_app.py** - Unit tests for command processing
 - **.gitignore** - Python cache and build files excluded
 
 ## App Features
@@ -69,9 +80,10 @@ A terminal interface for a personal portfolio, built with Streamlit. Implements 
 - Error details: enabled
 
 **Testing:**
-- Unit tests in `test_streamlit_app.py`
-- Tests cover all commands and directory navigation
-- Run with `pytest test_streamlit_app.py`
+- Unit tests organized in `tests/` directory by command
+- 43 tests cover all commands and directory navigation
+- Run with `pytest` (configured via pytest.ini)
+- Each test file contains a single command class with related tests
 
 ## Skills
 
@@ -79,4 +91,4 @@ A terminal interface for a personal portfolio, built with Streamlit. Implements 
 
 ## Git
 
-- **Commits** - Never include `Co-Authored-By` trailers in commit messages
+- **Commits** - Include `Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>` trailer in commit messages
