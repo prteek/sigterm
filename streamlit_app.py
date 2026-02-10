@@ -77,6 +77,9 @@ cat               Display file contents"""
 
     if cmd in commands:
         return ("text", commands[cmd], None)
+    elif cmd == "cat" or cmd == "cat ":
+        # cat without arguments
+        return ("text", "cat: missing file argument\nUsage: cat <file>", None)
     elif cmd.startswith("cat "):
         # cat command to display .txt file contents
         target = cmd[4:].strip()
@@ -101,8 +104,14 @@ cat               Display file contents"""
                 return ("text", f"cat: Error reading {target}: {str(e)}", None)
         else:
             return ("text", f"cat: {target}: No such file or directory", None)
+    elif cmd == "echo" or cmd == "echo ":
+        # echo without arguments
+        return ("text", "", None)
     elif cmd.startswith("echo "):
         return ("text", cmd[5:], None)
+    elif cmd == "cd" or cmd == "cd ":
+        # cd without arguments
+        return ("text", "cd: missing directory argument\nUsage: cd <directory>", None)
     elif cmd.startswith("cd "):
         # cd command to navigate into pages or directories
         target = cmd[3:].strip()

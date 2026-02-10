@@ -182,8 +182,15 @@ class TestProcessCommand:
         assert "No such file or directory" in result_content
 
     def test_cd_no_argument(self):
-        """Test cd without argument returns error"""
+        """Test cd without argument returns helpful error"""
         result_type, result_content, new_dir = process_command("cd ")
+        assert result_type == "text"
+        assert "missing directory argument" in result_content
+        assert "Usage:" in result_content
+
+    def test_cd_no_space(self):
+        """Test cd without space or argument returns helpful error"""
+        result_type, result_content, new_dir = process_command("cd")
         assert result_type == "text"
         assert "missing directory argument" in result_content
 
@@ -209,10 +216,18 @@ class TestProcessCommand:
         assert new_dir is None
 
     def test_cat_no_argument(self):
-        """Test cat without argument returns error"""
+        """Test cat without argument returns helpful error"""
         result_type, result_content, new_dir = process_command("cat ")
         assert result_type == "text"
-        assert "No such file or directory" in result_content
+        assert "missing file argument" in result_content
+        assert "Usage:" in result_content
+        assert new_dir is None
+
+    def test_cat_no_space(self):
+        """Test cat without space or argument returns helpful error"""
+        result_type, result_content, new_dir = process_command("cat")
+        assert result_type == "text"
+        assert "missing file argument" in result_content
         assert new_dir is None
 
     def test_help_includes_cat(self):
