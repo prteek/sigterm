@@ -14,6 +14,7 @@ class TestProcessCommand:
         assert "ls" in result_content
         assert "echo" in result_content
         assert "whoami" in result_content
+        assert "pwd" in result_content
         assert "clear" in result_content
         assert "cd" in result_content
         assert "cat" in result_content
@@ -22,6 +23,7 @@ class TestProcessCommand:
         assert "List directory contents" in result_content
         assert "Display text" in result_content
         assert "Show current user" in result_content
+        assert "Print working directory" in result_content
         assert "Clear screen" in result_content
         assert "Change directory" in result_content
         assert "Display file contents" in result_content
@@ -86,6 +88,18 @@ class TestProcessCommand:
         result_type, result_content, new_dir = process_command("whoami")
         assert result_type == "text"
         assert result_content == "user@inference"
+
+    def test_pwd_command_at_root(self):
+        """Test pwd command shows current working directory at root"""
+        result_type, result_content, new_dir = process_command("pwd")
+        assert result_type == "text"
+        assert "/home/user" in result_content
+
+    def test_pwd_command_in_subdirectory(self):
+        """Test pwd command shows current working directory in subdirectory"""
+        result_type, result_content, new_dir = process_command("pwd", current_dir="blog")
+        assert result_type == "text"
+        assert "/blog" in result_content
 
     def test_echo_command_with_text(self):
         """Test echo command echoes back the provided text"""

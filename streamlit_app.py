@@ -58,6 +58,7 @@ def process_command(cmd, current_dir="~"):
 ls                List directory contents
 echo              Display text
 whoami            Show current user
+pwd               Print working directory
 clear             Clear screen
 cd                Change directory
 cat               Display file contents"""
@@ -66,6 +67,7 @@ cat               Display file contents"""
         "help": help_text,
         "whoami": "user@inference",
         "clear": "",
+        "pwd": f"/{current_dir}" if current_dir != "~" else "/home/user",
     }
 
     # Dynamic ls based on current directory
