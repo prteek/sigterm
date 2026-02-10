@@ -37,11 +37,16 @@ def process_command(cmd, current_dir="~"):
 
     Args:
         cmd: Command string to process
-        current_dir: Current directory context (~ for root, or page name)
+        current_dir: Current directory context (~ for root, or directory name)
 
     Returns:
         tuple: (result_type, content, new_directory) where new_directory is None if unchanged
     """
+    # Define directory structure
+    directories = {
+        "blog": {"type": "directory", "content": "blog.py"},
+    }
+
     commands = {
         "help": "Available: help, ls, echo, whoami, clear, cd, cat",
         "whoami": "user@inference",
@@ -53,6 +58,7 @@ def process_command(cmd, current_dir="~"):
         if current_dir == "~":
             return ("text", "about.txt\nblog/", None)
         else:
+            # Inside a directory, show parent
             return ("text", "..", None)
 
     if cmd in commands:
@@ -91,7 +97,14 @@ def process_command(cmd, current_dir="~"):
             else:
                 return ("text", "Already at home", None)
         elif target:
-            # Load page/directory
+            # Check if it's a directory
+            if target in directories:
+                # Load the directory's content file
+                content_file = directories[target]["content"].replace(".py", "")
+                page_result = load_page(content_file)
+                if page_result:
+                    return (page_result[0], page_result[1], target)
+            # Try to load as a page
             page_result = load_page(target)
             if page_result:
                 return (page_result[0], page_result[1], target)
