@@ -1,2 +1,4 @@
 streamlit
 pytest
+beautifulsoup4
+requests

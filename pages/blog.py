@@ -1,58 +1,86 @@
-"""Blog page with links to Regression Room posts"""
+"""Dynamic blog page that fetches posts from Regression Room"""
+
+import requests
+from bs4 import BeautifulSoup
+import streamlit as st
+
+@st.cache_data(ttl=3600)  # Cache for 1 hour
+def fetch_blog_posts():
+    """Fetch blog posts from Regression Room website
+
+    Returns:
+        list: List of blog post dictionaries with title, url, description, tags
+    """
+    try:
+        url = "https://prteek.github.io/regression_room/index.html"
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # Find all post containers (quarto-post elements)
+        posts = []
+        post_containers = soup.find_all('div', class_='quarto-post')
+
+        for container in post_containers:
+            # Extract title and link from h3 > a
+            title_elem = container.find('h3', class_='listing-title')
+            if not title_elem:
+                continue
+
+            link_elem = title_elem.find('a')
+            if not link_elem:
+                continue
+
+            title = link_elem.get_text(strip=True)
+            url = link_elem.get('href', '#')
+
+            # Make relative URLs absolute
+            if url.startswith('./'):
+                url = "https://prteek.github.io/regression_room/" + url[2:]
+            elif url.startswith('/'):
+                url = "https://prteek.github.io" + url
+
+            # Extract categories/tags
+            categories_elem = container.find('div', class_='listing-categories')
+            tags = []
+            if categories_elem:
+                tag_elems = categories_elem.find_all('div', class_='listing-category')
+                tags = [tag.get_text(strip=True) for tag in tag_elems]
+
+            posts.append({
+                'title': title,
+                'url': url,
+                'tags': tags
+            })
+
+        return posts if posts else None
+
+    except Exception as e:
+        return None
+
 
 def render(st):
-    """Render the blog page
+    """Render the dynamic blog page
 
     Args:
         st: Streamlit module
     """
     st.markdown("### 📝 Blog Posts")
-    st.markdown("Statistical analysis and regression modeling")
+    st.markdown("Statistical analysis and regression modeling from [Regression Room](https://prteek.github.io/regression_room/)")
     st.divider()
 
-    blog_posts = [
-        {
-            "title": "rentership ~ occupation, analysis",
-            "url": "https://prteek.github.io/regression_room/posts/occupation_impact_on_rentals/index.html",
-            "description": "Analyzing the impact of occupation on rental housing using random effects and hierarchical models",
-            "tags": ["random effects", "hierarchical models", "glm", "binomial"]
-        },
-        {
-            "title": "MPG ~ manufacturer, analysis",
-            "url": "https://prteek.github.io/regression_room/posts/miles_per_gallon/index.html",
-            "description": "Examining how manufacturer affects miles per gallon using random effects and hierarchical modeling",
-            "tags": ["random effects", "hierarchical models"]
-        },
-        {
-            "title": "gambling spend ~ gender, analysis",
-            "url": "https://prteek.github.io/regression_room/posts/teen_gamble/index.html",
-            "description": "Statistical analysis of teenage gambling spending patterns across gender using regression and ANOVA",
-            "tags": ["regression", "ANOVA"]
-        },
-        {
-            "title": "Likelihood",
-            "url": "https://prteek.github.io/regression_room/posts/likelihood_primer/index.html",
-            "description": "A primer on likelihood theory, Fisher information, and Newton-Raphson optimization methods",
-            "tags": ["likelihood", "fisher information", "newton raphson"]
-        },
-        {
-            "title": "Probabilistic model of User journey",
-            "url": "https://prteek.github.io/regression_room/posts/user_behaviour_analysis/index.html",
-            "description": "Modeling user behavior and journey prediction using Markov chains and time series analysis",
-            "tags": ["markov chain", "timeseries"]
-        },
-        {
-            "title": "Movie runtime ~ year, analysis",
-            "url": "https://prteek.github.io/regression_room/posts/movies_getting_longer/index.html",
-            "description": "Investigating whether movies are getting longer over time using hypothesis testing and bootstrap methods",
-            "tags": ["hypothesis testing", "bootstrap", "regression"]
-        }
-    ]
+    with st.spinner("Loading blog posts..."):
+        posts = fetch_blog_posts()
 
-    for post in blog_posts:
-        st.markdown(f"**[{post['title']}]({post['url']})**")
-        st.caption(post['description'])
+    if posts:
+        for post in posts:
+            st.markdown(f"**[{post['title']}]({post['url']})**")
 
-        tag_str = " · ".join([f"`{tag}`" for tag in post['tags']])
-        st.markdown(tag_str)
-        st.divider()
+            if post['tags']:
+                tag_str = " · ".join([f"`{tag}`" for tag in post['tags']])
+                st.markdown(tag_str)
+
+            st.divider()
+    else:
+        st.warning("Could not fetch blog posts. Please try again later.")
