@@ -1,5 +1,5 @@
 import pytest
-from streamlit_app import process_command
+from commands import process_command
 
 
 class TestProcessCommand:
