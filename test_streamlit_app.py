@@ -15,6 +15,9 @@ class TestProcessCommand:
         assert "whoami" in result_content
         assert "clear" in result_content
         assert "cd" in result_content
+        # ~ and .. should not be listed in help
+        assert "~" not in result_content or "Available:" not in result_content or "~" not in result_content.split("Available:")[1]
+        assert ".." not in result_content or "Available:" not in result_content or ".." not in result_content.split("Available:")[1]
         assert new_dir is None
 
     def test_ls_command(self):
@@ -122,41 +125,34 @@ class TestProcessCommand:
         assert result_type == "text"
         assert result_content == '"quoted text"'
 
-    def test_home_tilde_command(self):
-        """Test ~ command returns home directory welcome message"""
-        result_type, result_content, new_dir = process_command("~")
+    def test_cd_home_command(self):
+        """Test cd ~ navigates to home from subdirectory"""
+        result_type, result_content, new_dir = process_command("cd ~", current_dir="blog")
         assert result_type == "text"
-        assert "Inference Terminal" in result_content
-        assert "Welcome" in result_content
-        assert "help" in result_content
+        assert "Navigated to home" in result_content
+        assert new_dir == "~"
 
-    def test_parent_directory_command(self):
-        """Test .. command at root directory"""
-        result_type, result_content, new_dir = process_command("..")
+    def test_cd_home_already_at_home(self):
+        """Test cd ~ when already at home"""
+        result_type, result_content, new_dir = process_command("cd ~")
         assert result_type == "text"
-        assert "root" in result_content or "Already" in result_content
+        assert "Already at home" in result_content
         assert new_dir is None
 
-    def test_help_includes_new_commands(self):
-        """Test that help command includes ~ and .. commands"""
-        result_type, result_content, new_dir = process_command("help")
+    def test_cd_parent_at_root(self):
+        """Test cd .. at root directory"""
+        result_type, result_content, new_dir = process_command("cd ..")
         assert result_type == "text"
-        assert "~" in result_content
-        assert ".." in result_content
+        assert "Already" in result_content or "root" in result_content
+        assert new_dir is None
 
-    def test_tilde_command_format(self):
-        """Test ~ command returns properly formatted output"""
-        result_type, result_content, new_dir = process_command("~")
-        assert result_type == "text"
-        lines = result_content.split('\n')
-        assert len(lines) >= 2, "~ command should return multiple lines"
-
-    def test_parent_directory_from_subdirectory(self):
-        """Test .. command navigates back from subdirectory"""
-        result_type, result_content, new_dir = process_command("..", current_dir="blog")
+    def test_cd_parent_from_subdirectory(self):
+        """Test cd .. navigates back from subdirectory"""
+        result_type, result_content, new_dir = process_command("cd ..", current_dir="blog")
         assert result_type == "text"
         assert "Navigated back" in result_content
         assert new_dir == "~"
+
 
     def test_cd_blog_command(self):
         """Test cd blog loads the blog page"""

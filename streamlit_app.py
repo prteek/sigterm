@@ -43,10 +43,9 @@ def process_command(cmd, current_dir="~"):
         tuple: (result_type, content, new_directory) where new_directory is None if unchanged
     """
     commands = {
-        "help": "Available: help, ls, echo, whoami, clear, ~, .., cd",
+        "help": "Available: help, ls, echo, whoami, clear, cd",
         "whoami": "user@inference",
         "clear": "",
-        "~": "Inference Terminal v1.0\n$ Welcome to your terminal interface\nType 'help' for available commands",
     }
 
     # Dynamic ls based on current directory
@@ -58,18 +57,25 @@ def process_command(cmd, current_dir="~"):
 
     if cmd in commands:
         return ("text", commands[cmd], None)
-    elif cmd == "..":
-        # Navigate back to root
-        if current_dir != "~":
-            return ("text", f"Navigated back from {current_dir}", "~")
-        else:
-            return ("text", "Already at root directory", None)
     elif cmd.startswith("echo "):
         return ("text", cmd[5:], None)
     elif cmd.startswith("cd "):
-        # cd command to navigate into pages
+        # cd command to navigate into pages or directories
         target = cmd[3:].strip()
-        if target:
+        if target == "..":
+            # Navigate back to root
+            if current_dir != "~":
+                return ("text", f"Navigated back from {current_dir}", "~")
+            else:
+                return ("text", "Already at root directory", None)
+        elif target == "~":
+            # Navigate to home/root
+            if current_dir != "~":
+                return ("text", "Navigated to home", "~")
+            else:
+                return ("text", "Already at home", None)
+        elif target:
+            # Load page/directory
             page_result = load_page(target)
             if page_result:
                 return (page_result[0], page_result[1], target)
